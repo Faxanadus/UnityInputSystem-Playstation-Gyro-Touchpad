@@ -1,10 +1,6 @@
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.Layouts;
-using UnityEngine.Scripting;
 
-////TODO: speaker, touchpad
-
-////TODO: move gyro here
 
 namespace UnityEngine.InputSystem.DualShock
 {
@@ -88,25 +84,25 @@ namespace UnityEngine.InputSystem.DualShock
 
 		[InputControl(name = "gyroX", displayName = "Gyro X", shortDisplayName = "GX")]
 		public AxisControl gyroX { get; protected set; }
-
 		[InputControl(name = "gyroY", displayName = "Gyro Y", shortDisplayName = "GY")]
 		public AxisControl gyroY { get; protected set; }
-
 		[InputControl(name = "gyroZ", displayName = "Gyro Z", shortDisplayName = "GZ")]
 		public AxisControl gyroZ { get; protected set; }
 
 
-		[InputControl(name = "accelX", displayName = "Accelerometer X", shortDisplayName = "AX")]
+		[InputControl(name = "accelX", displayName = "Accelerometer X", shortDisplayName = "AX")] //Only used with DualSense
 		public AxisControl accelX { get; protected set; }
 		[InputControl(name = "accelY", displayName = "Accelerometer Y", shortDisplayName = "AY")]
 		public AxisControl accelY { get; protected set; }
 		[InputControl(name = "accelZ", displayName = "Accelerometer Z", shortDisplayName = "AZ")]
 		public AxisControl accelZ { get; protected set; }
 
-		public IntegerControl touch1X { get; protected set; }
 
-		[InputControl(name = "touch1Y", displayName = "Touch 1Y", shortDisplayName = "T2X")]
+		[InputControl(name = "touch1X", displayName = "Touch 1X", shortDisplayName = "T1X")]
+		public IntegerControl touch1X { get; protected set; }
+		[InputControl(name = "touch1Y", displayName = "Touch 1Y", shortDisplayName = "T2Y")]
 		public IntegerControl touch1Y { get; protected set; }
+
 
 		[InputControl(name = "touch2X", displayName = "Touch 2X", shortDisplayName = "T2X")]
 		public IntegerControl touch2X { get; protected set; }
@@ -114,13 +110,12 @@ namespace UnityEngine.InputSystem.DualShock
 		public IntegerControl touch2Y { get; protected set; }
 
 
-		[InputControl(name = "touch1ID", displayName = "Touch 1ID", shortDisplayName = "T1ID")]
+		[InputControl(name = "touch1ID", displayName = "Touch 1ID", shortDisplayName = "T1ID")] //Only used with DualShock, used to determine when the touchpad is touched and released
 		public IntegerControl touch1ID { get; protected set; }
 		[InputControl(name = "touch2ID", displayName = "Touch 2ID", shortDisplayName = "T2ID")]
 		public IntegerControl touch2ID { get; protected set; }
-
 		public IntegerControl touchActive { get; protected set; }
-		[InputControl(name = "touchActive", displayName = "Touch Active", shortDisplayName = "TA")]
+		[InputControl(name = "touchActive", displayName = "Touch Active", shortDisplayName = "TA")] //Only used with DualSense, used to determine if the touchpad is still being touched
 
 		/// <summary>
 		/// The last used/added DualShock controller.
