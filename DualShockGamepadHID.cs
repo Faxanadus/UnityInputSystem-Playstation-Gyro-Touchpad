@@ -8,8 +8,6 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.DualShock.LowLevel;
 using UnityEngine.InputSystem.Utilities;
 
-////TODO: figure out sensor formats and add support for acceleration, angularVelocity, and orientation (also add to base layout then)
-
 namespace UnityEngine.InputSystem.DualShock.LowLevel
 {
     /// <summary>
@@ -18,7 +16,7 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
     /// </summary>
 	/// 
 
-    [StructLayout(LayoutKind.Explicit, Size = 9 /* !!! Beware !!! If you plan to increase this, think about how you gonna fit 10 byte state events because we can only shrink events in IEventPreProcessor */)]
+    [StructLayout(LayoutKind.Explicit, Size = 9)]
 
     internal struct DualSenseHIDInputReport : IInputStateTypeInfo
     {
@@ -623,14 +621,9 @@ namespace UnityEngine.InputSystem.DualShock
         }
 
 
-
         // filter out three lower bits as jitter noise
         internal const byte JitterMaskLow = 0b01111000;
         internal const byte JitterMaskHigh = 0b10000111;
-		//public static Vector3 gyro = Vector3.zero;
-		//public static Vector3 rot = Vector3.zero;
-		//float gyroScale = 1.0f / 16.0f; // approximate
-
 
         public unsafe void OnStateEvent(InputEventPtr eventPtr)
         {
@@ -659,30 +652,7 @@ namespace UnityEngine.InputSystem.DualShock
                     || newState->buttons2 != currentState->buttons2;
 
 
-				//short deltaX = (short)((state[17] << 8) | state[16]);
-				//short deltaY = (short)((state[19] << 8) | state[18]);
-				//short deltaZ = (short)((state[21] << 8) | state[20]);
-
-			//	short rotX = (short)((state[23] << 8) | state[22]);
-			//	short rotY = (short)((state[25] << 8) | state[24]);
-			//	short rotZ = (short)((state[27] << 8) | state[26]);
-
-				//Debug.Log(
-					//"=== IMU ===\n" +
-				//	$"Delta Rotation (Angular Velocity)\n" +
-				//	$"X: {deltaX,6} " +
-				//	$"Y: {deltaY,6} " +
-				//	$"Z: {deltaZ,6} " +
-
-					//$"Current Rotation / Orientation\n" +
-				//	$"X: {rotX,6} " +
-				//	$"Y: {rotY,6} " +
-				//	$"Z: {rotZ,6} "
-				//);
-
-					//gyro = new Vector3(deltaX, deltaY, deltaZ) * gyroScale;
-					//rot = new Vector3(rotX, rotY, rotZ);
-					//Debug.Log(newState->leftStickX + " " + newState->leftStickY + " " + newState->rightStickX + " " + newState->rightStickY + " " + newState->leftTrigger + " " + newState->rightTrigger + " " + newState->buttons0 + " " + newState->buttons1 + " " + newState->buttons2);
+		
 
 
                 if (!actuated)
