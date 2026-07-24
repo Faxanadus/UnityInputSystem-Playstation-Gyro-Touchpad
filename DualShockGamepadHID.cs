@@ -8,6 +8,8 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.DualShock.LowLevel;
 using UnityEngine.InputSystem.Utilities;
 
+//Updated by github.com/Faxanadus to include gyroscope, accelerometer, and touchpad controls //github.com/Faxanadus により、ジャイロスコープ、加速度センサー、タッチパッドの操作機能が追加されました
+
 namespace UnityEngine.InputSystem.DualShock.LowLevel
 {
     /// <summary>
@@ -21,7 +23,6 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
     internal struct DualSenseHIDInputReport : IInputStateTypeInfo
     {
         public static FourCC Format = new FourCC('D', 'S', 'V', 'S'); // DualSense Virtual State
-		//public static FourCC Format = new FourCC('H', 'I', 'D');
 
         public FourCC format => Format;
 
@@ -77,8 +78,6 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
         [InputControl(name = "micButton", layout = "Button", displayName = "Mic Mute", bit = 2)]
         [FieldOffset(8)] public byte buttons2;
 
-
-		//[InputControl(name = "gyro", layout = "Vector3", format = "SHRT", noisy = true)]
 		[InputControl(name = "gyroX", layout = "Axis", format = "SHRT", parameters = "invert", noisy = true)]
 		[FieldOffset(16)] public short gyroX;
 		[InputControl(name = "gyroY",  layout = "Axis", format = "SHRT", noisy = true)]
@@ -93,19 +92,22 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
 		[InputControl(name = "accelZ",  layout = "Axis", format = "SHRT", noisy = true)]
 		[FieldOffset(26)] public short accelZ;
 
-		[InputControl(name = "touch1X",  layout = "Integer", format = "BIT", bit = 0, sizeInBits = 12)]
+		[InputControl(name = "touch1ID",  layout = "Integer", format = "BIT", bit = 7, sizeInBits = 1)] //0 if touching, 1 if not touching with the 1st finger //人差し指で触れている場合は0、触れていない場合は1
+		[FieldOffset(33)] public bool touchData1ID;
+		[InputControl(name = "touch2ID", layout = "Integer", format = "BIT", bit = 7, sizeInBits = 1)]  //0 if touching, 1 if not touching with the 2nd finger, techically the end of byte 37 //2本目の指が触れている場合は0、触れていない場合は1, 厳密には、バイト37の終わり
+		[FieldOffset(34)] public bool touchData2ID;
+		[InputControl(name = "touch1X", layout = "Integer", format = "BIT", bit = 0, sizeInBits = 12)]
 		[FieldOffset(35)] public byte touchData1Start;
-		[InputControl(name = "touch1Y",  layout = "Integer", format = "BIT", bit = 4, sizeInBits = 12)]
+		[InputControl(name = "touch1Y", layout = "Integer", format = "BIT", bit = 4, sizeInBits = 12)]
 		[FieldOffset(36)] public byte touchData1Mid;
 		[FieldOffset(37)] public byte touchData1End;
 
-
-		[InputControl(name = "touch2X",  layout = "Integer", format = "BIT", bit = 0, sizeInBits = 12)]
+		[InputControl(name = "touch2X",  layout = "Integer", format = "BIT", bit = 7, sizeInBits = 12)] 
 		[FieldOffset(38)] public byte touchData2Start;
 		[InputControl(name = "touch2Y",  layout = "Integer", format = "BIT", bit = 4, sizeInBits = 12)]
 		[FieldOffset(39)] public byte touchData2Mid;
 		[FieldOffset(40)] public byte touchData2End;
-		[InputControl(name = "touchActive",  layout = "Integer", format = "BYTE")] //Constantly changes as long as a finger is touching the pad, replaces touch1ID and touch2ID from DualShock4
+		[InputControl(name = "touchActive",  layout = "Integer", format = "BYTE")] //Constantly changes as long as a finger is touching the pad, 指がパッドに触れている限り、絶えず変化し続けます
 		[FieldOffset(41)] public byte touchActive;
     }
 
@@ -186,10 +188,6 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
     {
         public static FourCC Format = new FourCC('D', '4', 'V', 'S'); // DualShock4 Virtual State
 
-		//public static FourCC Format = new FourCC('H', 'I', 'D');
-
-		
-
         public FourCC format => Format;
 
         [InputControl(name = "leftStick", layout = "Stick", format = "VC2B")]
@@ -248,7 +246,7 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
 		[FieldOffset(16)] public short gyroZ;
 
 		[InputControl(name = "touch1ID",  layout = "Integer", format = "BYTE")]
-		[FieldOffset(34)] public byte touchData1ID; //increments every time the touchpad is touched or released, not used with DualSense
+		[FieldOffset(34)] public byte touchData1ID; //increments every time the touchpad is touched or released //タッチパッドに触れたり指を離したりするたびに、カウントが1ずつ増えます
 		[InputControl(name = "touch1X",  layout = "Integer", format = "BIT", bit = 0, sizeInBits = 12)]
 		[FieldOffset(35)] public byte touchData1Start;
 		[InputControl(name = "touch1Y",  layout = "Integer", format = "BIT", bit = 4, sizeInBits = 12)]
@@ -256,7 +254,7 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
 		[FieldOffset(37)] public byte touchData1End;
 
 		[InputControl(name = "touch2ID",  layout = "Integer", format = "BYTE")]
-		[FieldOffset(38)] public byte touchData2ID; //increments every time the touchpad is touched or released by a second finger, not used with DualSense
+		[FieldOffset(38)] public byte touchData2ID; //increments every time the touchpad is touched or released by a second finger //2本目の指でタッチパッドに触れたり指を離したりするたびに、カウントが1ずつ増えます
 		[InputControl(name = "touch2X",  layout = "Integer", format = "BIT", bit = 0, sizeInBits = 12)]
 		[FieldOffset(39)] public byte touchData2Start;
 		[InputControl(name = "touch2Y",  layout = "Integer", format = "BIT", bit = 4, sizeInBits = 12)]
@@ -699,10 +697,12 @@ namespace UnityEngine.InputSystem.DualShock
 			[FieldOffset(24)] public short accelY;
 			[FieldOffset(26)] public short accelZ;
 
+			[FieldOffset(33)] public bool touchData1ID; 
 			[FieldOffset(34)] public byte touchData1Start;
 			[FieldOffset(35)] public byte touchData1Mid;
 			[FieldOffset(36)] public byte touchData1End;
 
+			[FieldOffset(37)] public bool touchData2ID;
 			[FieldOffset(38)] public byte touchData2Start;
 			[FieldOffset(39)] public byte touchData2Mid;
 			[FieldOffset(40)] public byte touchData2End;
@@ -732,10 +732,12 @@ namespace UnityEngine.InputSystem.DualShock
 					accelY = accelY,
 					accelZ = accelZ,
 
+					touchData1ID = touchData1ID,
 					touchData1Start = touchData1Start,
 					touchData1Mid = touchData1Mid,
 					touchData1End = touchData1End,
 
+					touchData2ID = touchData2ID,
 					touchData2Start = touchData2Start,
 					touchData2Mid = touchData2Mid,
 					touchData2End = touchData2End,
@@ -768,10 +770,12 @@ namespace UnityEngine.InputSystem.DualShock
 			[FieldOffset(24)] public short accelY;
 			[FieldOffset(26)] public short accelZ;
 
+			[FieldOffset(33)] public bool touchData1ID; 
 			[FieldOffset(34)] public byte touchData1Start;
 			[FieldOffset(35)] public byte touchData1Mid;
 			[FieldOffset(36)] public byte touchData1End;
 
+			[FieldOffset(37)] public bool touchData2ID;
 			[FieldOffset(38)] public byte touchData2Start;
 			[FieldOffset(39)] public byte touchData2Mid;
 			[FieldOffset(40)] public byte touchData2End;
@@ -800,10 +804,12 @@ namespace UnityEngine.InputSystem.DualShock
 					accelY = accelY,
 					accelZ = accelZ,
 
+					touchData1ID = touchData1ID,
 					touchData1Start = touchData1Start,
 					touchData1Mid = touchData1Mid,
 					touchData1End = touchData1End,
 
+					touchData2ID = touchData2ID,
 					touchData2Start = touchData2Start,
 					touchData2Mid = touchData2Mid,
 					touchData2End = touchData2End,
