@@ -1,6 +1,9 @@
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.Layouts;
 
+//Updated by github.com/Faxanadus to include gyroscope, accelerometer, and touchpad controls //github.com/Faxanadus により、ジャイロスコープ、加速度センサー、タッチパッドの操作機能が追加されました
+
+////TODO: speaker
 
 namespace UnityEngine.InputSystem.DualShock
 {
@@ -90,7 +93,7 @@ namespace UnityEngine.InputSystem.DualShock
 		public AxisControl gyroZ { get; protected set; }
 
 
-		[InputControl(name = "accelX", displayName = "Accelerometer X", shortDisplayName = "AX")] //Only used with DualSense
+		[InputControl(name = "accelX", displayName = "Accelerometer X", shortDisplayName = "AX")]
 		public AxisControl accelX { get; protected set; }
 		[InputControl(name = "accelY", displayName = "Accelerometer Y", shortDisplayName = "AY")]
 		public AxisControl accelY { get; protected set; }
@@ -110,12 +113,12 @@ namespace UnityEngine.InputSystem.DualShock
 		public IntegerControl touch2Y { get; protected set; }
 
 
-		[InputControl(name = "touch1ID", displayName = "Touch 1ID", shortDisplayName = "T1ID")] //Only used with DualShock, used to determine when the touchpad is touched and released
+		[InputControl(name = "touch1ID", displayName = "Touch 1ID", shortDisplayName = "T1ID")] 
 		public IntegerControl touch1ID { get; protected set; }
 		[InputControl(name = "touch2ID", displayName = "Touch 2ID", shortDisplayName = "T2ID")]
 		public IntegerControl touch2ID { get; protected set; }
 		public IntegerControl touchActive { get; protected set; }
-		[InputControl(name = "touchActive", displayName = "Touch Active", shortDisplayName = "TA")] //Only used with DualSense, used to determine if the touchpad is still being touched
+		[InputControl(name = "touchActive", displayName = "Touch Active", shortDisplayName = "TA")]
 
 		/// <summary>
 		/// The last used/added DualShock controller.
@@ -174,9 +177,9 @@ namespace UnityEngine.InputSystem.DualShock
 			touch2X = TryGetChildControl<IntegerControl>("touch2X");
 			touch2Y = TryGetChildControl<IntegerControl>("touch2Y");
 
-			touch1ID = TryGetChildControl<IntegerControl>("touch1ID"); //only used by dualshock4 to detect touchpad taps and release
-			touch2ID = TryGetChildControl<IntegerControl>("touch2ID"); //only used by dualshock4 to detect touchpad taps and release with the second finger
-			touchActive = TryGetChildControl<IntegerControl>("touchActive"); //only used by dualsense to detect touchpad taps, constantly changes while the touchpad is touched
+			touch1ID = TryGetChildControl<IntegerControl>("touch1ID"); 
+			touch2ID = TryGetChildControl<IntegerControl>("touch2ID");
+			touchActive = TryGetChildControl<IntegerControl>("touchActive"); 
 
 			if (m_Description.capabilities != null && m_Description.interfaceName == "HID")
                 hidDescriptor = HID.HID.HIDDeviceDescriptor.FromJson(m_Description.capabilities);
