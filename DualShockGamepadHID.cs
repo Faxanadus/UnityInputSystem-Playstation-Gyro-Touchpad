@@ -78,14 +78,14 @@ namespace UnityEngine.InputSystem.DualShock.LowLevel
         [InputControl(name = "micButton", layout = "Button", displayName = "Mic Mute", bit = 2)]
         [FieldOffset(8)] public byte buttons2;
 
-		[InputControl(name = "gyroX", layout = "Axis", format = "SHRT", parameters = "invert", noisy = true)]
+		[InputControl(name = "gyroX", layout = "Axis", format = "SHRT", noisy = true)]
 		[FieldOffset(16)] public short gyroX;
 		[InputControl(name = "gyroY",  layout = "Axis", format = "SHRT", noisy = true)]
 		[FieldOffset(18)] public short gyroY;
 		[InputControl(name = "gyroZ",  layout = "Axis", format = "SHRT", noisy = true)]
 		[FieldOffset(20)] public short gyroZ;
 
-		[InputControl(name = "accelX", layout = "Axis", format = "SHRT", parameters = "invert", noisy = true)]
+		[InputControl(name = "accelX", layout = "Axis", format = "SHRT", noisy = true)]
 		[FieldOffset(22)] public short accelX;
 		[InputControl(name = "accelY",  layout = "Axis", format = "SHRT", noisy = true)]
 		[FieldOffset(24)] public short accelY;
